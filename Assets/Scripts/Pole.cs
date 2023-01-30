@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 // MANAGES NODES, SETS TOP MOST DISK AS INTERACTABLE
 
@@ -19,10 +20,12 @@ public class Pole : MonoBehaviour {
     private Node topEmptyNode;
     private int topEmptyNodeIndex = 0;
 
+    public UnityEvent Evt_PoleModified = new();
+
     private void Start() {
         topEmptyNode = GetTopMostNode();
     }
-
+    
     private Node GetTopMostNode() { // TOP MOST EMPTY NODE
         int index = 0;
         foreach (var n in Nodes) {
@@ -59,10 +62,12 @@ public class Pole : MonoBehaviour {
         Nodes[topEmptyNodeIndex].AttachDisk(disk); // attach to node above last node
         topEmptyNode = GetTopMostNode();
         
+        print("add disk");
+        SetInteractableDisk();
+        Evt_PoleModified.Invoke();
+        
         // Add listener to disk Evt_OnDiskMoved -> OnRemoveDisk
         disk.Evt_OnDiskMoved.AddListener(OnRemoveDisk);
-        
-        SetInteractableDisk();
     }
     
     private void OnRemoveDisk(Disk disk) {

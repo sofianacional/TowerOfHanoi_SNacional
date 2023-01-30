@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour {
 
 	private void Start() {
 		SpawnDisks();
+		foreach (var p in Poles) {
+			p.Evt_PoleModified.AddListener(AddMove);
+		}
 	}
 
 	public void SpawnDisks() {
@@ -23,4 +26,22 @@ public class GameManager : MonoBehaviour {
 			Poles[0].OnAddDisk(newDisk);
 		}
 	}
+
+	private void AddMove() {
+		NumberOfMoves++;
+		CheckPoleContents();
+	}
+
+	private void CheckPoleContents() {
+		int count = 0;
+		foreach (var n in Poles[2].Nodes) {
+			if (!n.CurrentDisk) continue;
+			count++;
+			if (count >= numberOfDisks) {
+				// game over
+				print("game over");
+			}
+		}
+	}
+	
 }

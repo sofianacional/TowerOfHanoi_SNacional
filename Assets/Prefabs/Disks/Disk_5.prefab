@@ -101,7 +101,7 @@ MonoBehaviour:
   DiskID: 5
   IsInteractable: 0
   CurrentNode: {fileID: 0}
-  Evt_OnDiskDrop:
+  Evt_OnDiskMoved:
     m_PersistentCalls:
       m_Calls: []
 --- !u!61 &5001218733789228424
