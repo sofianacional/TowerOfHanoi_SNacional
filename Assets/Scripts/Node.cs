@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Node : MonoBehaviour {
@@ -8,8 +5,7 @@ public class Node : MonoBehaviour {
 	[SerializeField] private int nodeID;
 
 	public Pole Pole;
-	//public Disk CurrentDisk { get; private set; }
-	public Disk CurrentDisk;
+	public Disk CurrentDisk { get; private set; }
 
 	private void Start() {
 		Pole = GetComponentInParent<Pole>();

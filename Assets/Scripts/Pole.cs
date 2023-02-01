@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-
-// MANAGES NODES, SETS TOP MOST DISK AS INTERACTABLE
 
 public class Pole : MonoBehaviour {
     public enum PoleType {
@@ -23,10 +18,14 @@ public class Pole : MonoBehaviour {
     public UnityEvent Evt_PoleModified = new();
 
     private void Start() {
+        InitializePole();
+    }
+
+    public void InitializePole() {
         topEmptyNode = GetFirstEmptyNode();
     }
     
-    public Node GetFirstEmptyNode() { // TOP MOST EMPTY NODE
+    public Node GetFirstEmptyNode() {
         int index = 0;
         foreach (var n in Nodes) {
             if (n.CurrentDisk) {
@@ -60,7 +59,7 @@ public class Pole : MonoBehaviour {
     }
     
     public bool CanAttachDisk(Disk newDisk) {
-        // Check thorough all nodes and their contents
+        // Check through all nodes and their contents
         if (topEmptyNodeIndex >= Nodes.Count) return false; // Tower is full
         if (topEmptyNodeIndex <= 0) return true; // Tower is empty
         if (newDisk.DiskID < Nodes[topEmptyNodeIndex - 1].CurrentDisk.DiskID) return true;
@@ -80,12 +79,11 @@ public class Pole : MonoBehaviour {
         SetInteractableDisk();
         Evt_PoleModified.Invoke();
         
-        // Add listener to disk Evt_OnDiskMoved -> OnRemoveDisk
         disk.Evt_OnDiskMoved.AddListener(OnRemoveDisk);
     }
     
     private void OnRemoveDisk(Disk disk) {
-        // Search for Node with DISK
+        // Search for Node with disk
         foreach (var n in Nodes) {
             if (n.CurrentDisk == disk) {
                 disk.Evt_OnDiskMoved.RemoveListener(OnRemoveDisk);
@@ -97,4 +95,5 @@ public class Pole : MonoBehaviour {
         
         if(topEmptyNodeIndex > 0) SetInteractableDisk();
     }
+    
 }

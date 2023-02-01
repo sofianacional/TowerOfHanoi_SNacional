@@ -1,29 +1,37 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PlayerInput : MonoBehaviour {
 
+	private Camera mainCam;
+
+	public bool CanInteract = true;
 	public Disk CurrentDisk;
 	
+	private void Start() {
+		mainCam = Camera.main;
+	}
+
 	private void Update() {
+		if(!CanInteract) return;
+		
 		if (Input.GetMouseButtonDown(0)) {
 			Vector3 mousePos = Input.mousePosition;
-			Vector3 screenPoint = Camera.main.ScreenToWorldPoint(mousePos);
+			Vector3 screenPoint = mainCam.ScreenToWorldPoint(mousePos);
 			
 			RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
 			
-			if (hit.collider.gameObject && hit.collider.gameObject.GetComponent<Disk>()) {
+			if (!hit.collider) return;
+			
+			if(hit.collider.gameObject.GetComponent<Disk>()) {
 				Disk newDisk = hit.collider.gameObject.GetComponent<Disk>();
-				if(newDisk.IsInteractable) CurrentDisk = newDisk;
+				if (newDisk.IsInteractable) CurrentDisk = newDisk;
 			}
 		}
 
 		if (CurrentDisk && CurrentDisk.IsInteractable) {
 			if(Input.GetMouseButton(0))
-				CurrentDisk.transform.position = Camera.main.ScreenToWorldPoint(GetMousePosition());
+				CurrentDisk.transform.position = mainCam.ScreenToWorldPoint(GetMousePosition());
 			if (Input.GetMouseButtonUp(0)) {
 				// Drop disk
 				OnDropDisk();
