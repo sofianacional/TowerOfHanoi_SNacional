@@ -8,6 +8,7 @@ public class Node : MonoBehaviour {
 	[SerializeField] private int nodeID;
 
 	public Pole Pole;
+	//public Disk CurrentDisk { get; private set; }
 	public Disk CurrentDisk;
 
 	private void Start() {
@@ -17,10 +18,14 @@ public class Node : MonoBehaviour {
 
 	public void AttachDisk(Disk selectedDisk) {
 		selectedDisk.transform.position = transform.position;
-		CurrentDisk = selectedDisk;
+		SetNodeDisk(selectedDisk);
 		selectedDisk.CurrentNode = this;
 	}
 
+	public void SetNodeDisk(Disk newDisk) {
+		CurrentDisk = newDisk;
+	}
+	
 	public void ClearNode() {
 		CurrentDisk = null;
 	}

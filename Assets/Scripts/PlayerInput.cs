@@ -15,7 +15,7 @@ public class PlayerInput : MonoBehaviour {
 			
 			RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
 			
-			if (hit.collider.gameObject.GetComponent<Disk>()) {
+			if (hit.collider.gameObject && hit.collider.gameObject.GetComponent<Disk>()) {
 				Disk newDisk = hit.collider.gameObject.GetComponent<Disk>();
 				if(newDisk.IsInteractable) CurrentDisk = newDisk;
 			}
@@ -48,7 +48,7 @@ public class PlayerInput : MonoBehaviour {
 		// IF POLE 
 		if (newPole && newPole != CurrentDisk.CurrentNode.Pole && newPole.CanAttachDisk(CurrentDisk)) {
 			CurrentDisk.Evt_OnDiskMoved.Invoke(CurrentDisk);
-			newPole.OnAddDisk(CurrentDisk);
+			newPole.AttachDiskToPole(CurrentDisk);
 		}
 		else { // RETURN DISK TO PREVIOUS NODE
 			CurrentDisk.CurrentNode.AttachDisk(CurrentDisk);

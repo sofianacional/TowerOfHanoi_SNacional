@@ -23,10 +23,10 @@ public class Pole : MonoBehaviour {
     public UnityEvent Evt_PoleModified = new();
 
     private void Start() {
-        topEmptyNode = GetTopMostNode();
+        topEmptyNode = GetFirstEmptyNode();
     }
     
-    private Node GetTopMostNode() { // TOP MOST EMPTY NODE
+    public Node GetFirstEmptyNode() { // TOP MOST EMPTY NODE
         int index = 0;
         foreach (var n in Nodes) {
             if (n.CurrentDisk) {
@@ -40,6 +40,16 @@ public class Pole : MonoBehaviour {
         }
         topEmptyNodeIndex = index;
         return topEmptyNode;
+    }
+
+    public Node GetTopMostFilledNode() {
+        Node lastNode = null;
+        foreach (var n in Nodes) {
+            if (!n.CurrentDisk) break;
+            lastNode = n;
+        }
+
+        return lastNode;
     }
     
     private void SetInteractableDisk() {
@@ -58,11 +68,15 @@ public class Pole : MonoBehaviour {
         return false;
     }
 
-    public void OnAddDisk(Disk disk) {
+    public void AttachDiskToPole(Disk disk) {
         Nodes[topEmptyNodeIndex].AttachDisk(disk); // attach to node above last node
-        topEmptyNode = GetTopMostNode();
+        OnAddDisk(disk);
+    }
+    
+    public void OnAddDisk(Disk disk) {
+        Nodes[topEmptyNodeIndex].SetNodeDisk(disk);
+        topEmptyNode = GetFirstEmptyNode();
         
-        print("add disk");
         SetInteractableDisk();
         Evt_PoleModified.Invoke();
         
@@ -79,7 +93,7 @@ public class Pole : MonoBehaviour {
                 break;
             }
         }
-        topEmptyNode = GetTopMostNode();
+        topEmptyNode = GetFirstEmptyNode();
         
         if(topEmptyNodeIndex > 0) SetInteractableDisk();
     }
